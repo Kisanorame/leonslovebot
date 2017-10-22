@@ -164,7 +164,7 @@ client.on("message", async message => {
   }
 
   if(command === "help"){
-	  message.channel.send(message.author.toString() + "```\nCommands: \n/help \n/ban \n/kick \n/say \n/ping \n/fortune \n/ascii \n/clear \n/info \n```");
+	  message.channel.send(message.author.toString() + "```\nCommands: \n/help \n/ban \n/kick \n/say \n/ping \n/points \n/level \n/fortune \n/ascii \n/clear \n/info \n```");
   }
 
   else return;
@@ -186,7 +186,7 @@ app.get('/', (request, response) => {
 });
 
 app.listen(port, () => {
-    console.log('Our app is running on http://localhost:' + port);
+    console.log('Bot running on http://localhost:' + port);
 });
 
 setInterval(() => {
