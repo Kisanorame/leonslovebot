@@ -1,10 +1,17 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const config = require("./config.json");
+const sql = require("sqlite");
+sql.open("./score.sqlite");
 
 client.on("ready", () => {
   console.log(`Bot initialized successfully!`); 
   client.user.setGame(`with your heart~ <3`);
+});
+
+client.on('guildMemberAdd', member => {
+   member.send("PLACEHOLDER TEXT");
+   member.guild.channels.find("name", "general").send(member.toString()+"\nWelcome Message");
 });
 
 var fortunes = [
@@ -46,14 +53,51 @@ var ascii = [
 	
 client.on("message", async message => {
   if(message.author.bot) return;
+  if (message.channel.type === "dm") return;
+  if (message.channel.type !== "text") return;
     console.log(message.author.toString()+": "+message.content);
+	
+	
+  sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
+    if (!row) {
+      sql.run("INSERT INTO scores (userId, points, level) VALUES (?, ?, ?)", [message.author.id, 1, 0]);
+    } else {
+      let curLevel = Math.floor(0.5 * Math.sqrt(row.points + 1));
+      if (curLevel > row.level) {
+        row.level = curLevel;
+        sql.run(`UPDATE scores SET points = ${row.points + 1}, level = ${row.level} WHERE userId = ${message.author.id}`);
+        message.reply(`you've leveled up to level **${curLevel+1}**!`);
+      }
+      sql.run(`UPDATE scores SET points = ${row.points + 1} WHERE userId = ${message.author.id}`);
+    }
+  }).catch(() => {
+    console.error;
+    sql.run("CREATE TABLE IF NOT EXISTS scores (userId TEXT, points INTEGER, level INTEGER)").then(() => {
+      sql.run("INSERT INTO scores (userId, points, level) VALUES (?, ?, ?)", [message.author.id, 1, 0]);
+    });
+  });
+
+  if (message.content.startsWith(config.prefix + "level")) {
+    sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
+      if (!row) return message.reply("Your current level is 1");
+      message.reply(`your current level is ${row.level+1}`);
+    });
+  } else
+
+  if (message.content.startsWith(config.prefix + "points")) {
+    sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
+      if (!row) return message.reply("sadly you do not have any points yet!");
+      message.reply(`you currently have ${row.points} points!`);
+    });
+  }
+	
+	
+	
   if(message.content.indexOf(config.prefix) !== 0) return;
     const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
   
   if(command === "ping") {
-    // Calculates ping between sending a message and editing it, giving a nice round-trip latency.
-    // The second ping is an average latency between the bot and the websocket server (one-way, not round-trip)
     const m = await message.channel.send("Ping?");
     m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms`);
   }
@@ -61,7 +105,7 @@ client.on("message", async message => {
   if(command === "say") {
     const sayMessage = args.join(" ");
     message.delete().catch(O_o=>{}); 
-    message.channel.send(sayMessage+"!");
+    message.channel.send("```\n"+sayMessage+"```");
   }
   
   if(command === "kick") {
@@ -128,35 +172,23 @@ client.on("message", async message => {
 
 client.login(config.token);
 
-//credit for source code: https://gist.github.com/eslachance/3349734a98d30011bb202f47342601d3
-
-// Web app (Express + EJS)
 const http = require('http');
 const express = require('express');
 const app = express();
-
-// set the port of our application
-// process.env.PORT lets the port be set by Heroku
 const port = process.env.PORT || 5000;
 
-// set the view engine to ejs
 app.set('view engine', 'ejs');
 
-// make express look in the `public` directory for assets (css/js/img)
 app.use(express.static(__dirname + '/public'));
 
-// set the home page route
 app.get('/', (request, response) => {
-    // ejs render automatically looks in the views folder
     response.render('index');
 });
 
 app.listen(port, () => {
-    // will echo 'Our app is running on http://localhost:5000 when run locally'
     console.log('Our app is running on http://localhost:' + port);
 });
 
-// pings server every 15 minutes to prevent dynos from sleeping
 setInterval(() => {
  http.get('https://intense-tundra-47026.herokuapp.com/');
 }, 900000);

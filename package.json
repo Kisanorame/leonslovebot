@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"start": "node app.js"
+    "start": "node app.js"
   },
   "keywords": [
     "love",
@@ -15,11 +15,12 @@
   "license": "null",
   "dependencies": {
     "discord.js": "^11.2.1",
-	"ejs": "^2.5.7",
-	"express": "^4.16.2"
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "sqlite": "^2.8.0"
   },
   "engines": {
     "node": "8.7.0",
-	"npm": "5.4.2"
+    "npm": "5.4.2"
   }
 }
