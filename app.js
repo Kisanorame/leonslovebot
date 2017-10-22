@@ -1,8 +1,8 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const config = require("./config.json");
-const sql = require("sqlite");
-sql.open("./score.sqlite");
+//const sql = require("sqlite");
+//sql.open("./score.sqlite");
 
 client.on("ready", () => {
   console.log(`Bot initialized successfully!`); 
@@ -58,38 +58,38 @@ client.on("message", async message => {
     console.log(message.author.toString()+": "+message.content);
 	
 	
-  sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
-    if (!row) {
-      sql.run("INSERT INTO scores (userId, points, level) VALUES (?, ?, ?)", [message.author.id, 1, 0]);
-    } else {
-      let curLevel = Math.floor(0.3 * Math.sqrt(row.points + 1));
-      if (curLevel > row.level) {
-        row.level = curLevel;
-        sql.run(`UPDATE scores SET points = ${row.points + 1}, level = ${row.level} WHERE userId = ${message.author.id}`);
-        message.reply(`you've leveled up to level **${curLevel}**!`);
-      }
-      sql.run(`UPDATE scores SET points = ${row.points + 1} WHERE userId = ${message.author.id}`);
-    }
-  }).catch(() => {
-    console.error;
-    sql.run("CREATE TABLE IF NOT EXISTS scores (userId TEXT, points INTEGER, level INTEGER)").then(() => {
-      sql.run("INSERT INTO scores (userId, points, level) VALUES (?, ?, ?)", [message.author.id, 1, 0]);
-    });
-  });
+//  sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
+//    if (!row) {
+//      sql.run("INSERT INTO scores (userId, points, level) VALUES (?, ?, ?)", [message.author.id, 1, 0]);
+//    } else {
+//      let curLevel = Math.floor(0.3 * Math.sqrt(row.points + 1));
+//      if (curLevel > row.level) {
+//        row.level = curLevel;
+//        sql.run(`UPDATE scores SET points = ${row.points + 1}, level = ${row.level} WHERE userId = ${message.author.id}`);
+//        message.reply(`you've leveled up to level **${curLevel}**!`);
+//      }
+//      sql.run(`UPDATE scores SET points = ${row.points + 1} WHERE userId = ${message.author.id}`);
+//    }
+//  }).catch(() => {
+//    console.error;
+//    sql.run("CREATE TABLE IF NOT EXISTS scores (userId TEXT, points INTEGER, level INTEGER)").then(() => {
+//      sql.run("INSERT INTO scores (userId, points, level) VALUES (?, ?, ?)", [message.author.id, 1, 0]);
+//    });
+//  });
 
-  if (message.content.startsWith(config.prefix + "level")) {
-    sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
-      if (!row) return message.reply("Your current level is 0");
-      message.reply(`your current level is ${row.level}`);
-    });
-  } else
+//  if (message.content.startsWith(config.prefix + "level")) {
+//    sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
+//      if (!row) return message.reply("Your current level is 0");
+//      message.reply(`your current level is ${row.level}`);
+//    });
+//  } else
 
-  if (message.content.startsWith(config.prefix + "points")) {
-    sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
-      if (!row) return message.reply("sadly you do not have any points yet!");
-      message.reply(`you currently have ${row.points} points!`);
-    });
-  }
+//  if (message.content.startsWith(config.prefix + "points")) {
+//    sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
+//      if (!row) return message.reply("sadly you do not have any points yet!");
+//      message.reply(`you currently have ${row.points} points!`);
+//    });
+//  }
 	
 	
 	
