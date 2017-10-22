@@ -66,7 +66,7 @@ client.on("message", async message => {
       if (curLevel > row.level) {
         row.level = curLevel;
         sql.run(`UPDATE scores SET points = ${row.points + 1}, level = ${row.level} WHERE userId = ${message.author.id}`);
-        message.reply(`you've leveled up to level **${curLevel+1}**!`);
+        message.reply(`you've leveled up to level **${curLevel}**!`);
       }
       sql.run(`UPDATE scores SET points = ${row.points + 1} WHERE userId = ${message.author.id}`);
     }
@@ -79,8 +79,8 @@ client.on("message", async message => {
 
   if (message.content.startsWith(config.prefix + "level")) {
     sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
-      if (!row) return message.reply("Your current level is 1");
-      message.reply(`your current level is ${row.level+1}`);
+      if (!row) return message.reply("Your current level is 0");
+      message.reply(`your current level is ${row.level}`);
     });
   } else
 
