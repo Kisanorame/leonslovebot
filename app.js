@@ -190,5 +190,5 @@ app.listen(port, () => {
 });
 
 setInterval(() => {
- http.get('https://intense-tundra-47026.herokuapp.com/');
+ http.get('https://leonslovebot.herokuapp.com/');
 }, 900000);
