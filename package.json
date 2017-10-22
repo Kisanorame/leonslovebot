@@ -12,8 +12,8 @@
   },
   "author": "leon",
   "license": "ISC"
-}
-  },
   "engines": {
     "node": "8.7.0"
   }
+
+}
