@@ -1,7 +1,6 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const config = require("./config.json");
-const port = process.env.PORT || 5000;
 
 client.on("ready", () => {
   console.log(`Bot initialized successfully!`); 
