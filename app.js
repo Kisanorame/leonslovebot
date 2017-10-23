@@ -11,7 +11,7 @@ client.on("ready", () => {
 
 client.on('guildMemberAdd', member => {
    member.send("Welcome to our server, please set your roles at #roles, use the command /list-self-roles to see the choices available, and /toggle-role <role> to set them. After that is done, feel free to jump in chat and start mingling with the other singles. And why not go ahead and make an #introductions for yourself. All we require is for you to at least set a gender role for yourself to unlock access to the server.\nIf you wish to become a @Verified or @VIP member, please contact a server staff member to proceed.\n<3");
-   member.guild.channels.find("name", "general").send(member.toString()+"\nWelcome, please set your roles, and enjoy the server~<3");
+   member.guild.channels.find("name", "welcome").send(member.toString()+"\nWelcome, please set your roles, and enjoy the server~<3");
 });
 
 var fortunes = [
